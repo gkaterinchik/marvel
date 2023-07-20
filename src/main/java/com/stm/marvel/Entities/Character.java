@@ -17,9 +17,10 @@ public class Character {
     private String name;
     @Column(name="description")
     private String description;
-    @Column(name = "comics")
     @ManyToMany
-    @JoinColumn()
+    @JoinTable(name="characters_comics",
+            joinColumns= @JoinColumn(name="character_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name= "comics_id",referencedColumnName = "id") )
     private List<Comics> comics;
     @Column(name="thumbnail_uri")
     private String thumbnailUri;

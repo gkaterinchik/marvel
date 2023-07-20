@@ -19,7 +19,9 @@ public class Comics {
     private String description;
     @Column(name = "cover_uri")
     private String coverUri;
-    @Column(name = "characters")
     @ManyToMany
+    @JoinTable(name="characters_comics",
+            joinColumns= @JoinColumn(name="comics_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name= "character_id",referencedColumnName = "id") )
     private List<Character> characters;
 }
