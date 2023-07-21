@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
+
 @ControllerAdvice
 public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
@@ -26,5 +27,10 @@ public class ExceptionHandler {
         //String message = ex.getMessage();
         AppError error = new AppError(400, ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+        return ResponseEntity.notFound().build();
     }
 }
