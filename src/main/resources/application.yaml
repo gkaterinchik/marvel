@@ -3,6 +3,11 @@ server:
   servlet:
     context-path: /app
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -16,4 +21,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: create-drop
+
+
+
+
 
