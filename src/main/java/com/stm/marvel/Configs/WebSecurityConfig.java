@@ -30,9 +30,10 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/public/registration").permitAll()
-                        .requestMatchers("/api/v1/public/auth").permitAll()
-                        .requestMatchers("/api/v1/public/files/**").permitAll()
+                        .requestMatchers("/v1/public/**").permitAll()
+                        .requestMatchers("/v1/public/registration").permitAll()
+                        .requestMatchers("/v1/public/auth").permitAll()
+                        .requestMatchers("/v1/public/files/**").permitAll()
 
                 )
 
