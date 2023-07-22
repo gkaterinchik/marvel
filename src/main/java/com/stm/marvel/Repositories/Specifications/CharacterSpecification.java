@@ -14,7 +14,7 @@ public class CharacterSpecification {
 
     public static Specification<Character> ContainsComicsWhithId(Integer id) {
         return (root, query, criteriaBuilder) -> {
-            root.join("comics", JoinType.INNER);
+            root.join("comics", JoinType.RIGHT);
             return criteriaBuilder.equal(root.get("comics").get("id"),id);
     };
 

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 @Accessors(chain = true)
 public class CharacterDTO {
@@ -13,13 +15,13 @@ public class CharacterDTO {
     private Integer id;
     private String name;
     private String description;
-    private List<Comics> comics;
+    private List<ComicsWithoutCharactersDTO> comics;
 
     public CharacterDTO(Character character){
         this.id=character.getId();
         this.name=character.getName();
         this.description=character.getDescription();
-        this.comics=character.getComics();
+        this.comics=character.getComics().stream().map(ComicsWithoutCharactersDTO::new).collect(Collectors.toList());
 
     }
 

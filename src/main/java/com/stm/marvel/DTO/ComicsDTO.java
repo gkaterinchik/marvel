@@ -10,5 +10,7 @@ import java.util.List;
 public class ComicsDTO {
     private Integer id;
     private String title;
+    private String creator;
+    private String coverUri;
     private List<Character> characters;
 }

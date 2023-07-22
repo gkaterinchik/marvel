@@ -17,6 +17,8 @@ public class Comics {
     private String title;
     @Column(name = "description")
     private String description;
+    @Column(name = "creator")
+    private String creator;
     @Column(name = "cover_uri")
     private String coverUri;
     @ManyToMany

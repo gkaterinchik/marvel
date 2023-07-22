@@ -4,6 +4,7 @@ import com.stm.marvel.DTO.CharacterDTO;
 import com.stm.marvel.DTO.ComicsDTO;
 import com.stm.marvel.Exceptions.ElementNotFound;
 import com.stm.marvel.Services.CharacterService;
+import com.stm.marvel.Services.ComicsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -14,20 +15,22 @@ import java.util.List;
 @RequestMapping("/v1/public/characters")
 public class CharacterController {
     CharacterService characterService;
+    ComicsService comicsService;
 @Autowired
-    public CharacterController(CharacterService characterService) {
+    public CharacterController(CharacterService characterService,ComicsService comicsService) {
         this.characterService = characterService;
+        this.comicsService=comicsService;
     }
 
     @GetMapping
     public Page<CharacterDTO> getAllCharacters( @RequestParam(name = "p", defaultValue = "1") Integer page,
                                                 @RequestParam(name = "name", required = false) String name,
-                                                @RequestParam(name = "nameStartsWith", required = false) String nameStartsWith,
+                                                @RequestParam(name = "description", required = false) String description,
                                                 @RequestParam(name = "comics", required = false) Integer comics){
         if (page < 1) {
             page = 1;
         }
-return characterService.find(name,nameStartsWith,comics,page).map(CharacterDTO::new);
+return characterService.find(name,description,comics,page).map(CharacterDTO::new);
 
     }
     @GetMapping("/{characterId}")
