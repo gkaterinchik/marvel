@@ -12,6 +12,7 @@ public interface CharacterService {
 Page<Character> find(String name,String nameStartsWith, Integer comics, Integer page);
 Optional<Character> findById(Integer id);
 CharacterDTO save(CharacterDTO character, MultipartFile file,String ids);
+CharacterDTO edit(CharacterDTO character, MultipartFile file,String ids,Integer characterId);
 
 
 

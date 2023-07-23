@@ -61,11 +61,12 @@ public class CharacterController {
 
     @PutMapping("/{characterID}")
     public CharacterDTO editCharacter(@RequestPart(name = "file", required = false) MultipartFile file,
-                                      @RequestPart(name = "character") Character character,
-                                      @RequestPart(name= "comicsIds",required = false)String ids) {
+                                      @RequestPart(name = "character") CharacterDTO character,
+                                      @RequestPart(name= "comicsIds",required = false)String ids,
+                                      @PathVariable Integer characterID ) {
 
 
-return null;
+        return characterService.edit(character, file, ids, characterID);
     }
 
 

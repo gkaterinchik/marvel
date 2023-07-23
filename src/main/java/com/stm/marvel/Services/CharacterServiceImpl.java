@@ -1,8 +1,6 @@
 package com.stm.marvel.Services;
 
 import com.stm.marvel.DTO.CharacterDTO;
-import com.stm.marvel.DTO.ComicsWithoutCharactersDTO;
-import com.stm.marvel.DTO.CreateCharacterResponse;
 import com.stm.marvel.Entities.Character;
 import com.stm.marvel.Entities.Comics;
 import com.stm.marvel.Exceptions.ElementNotFound;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
@@ -53,13 +50,14 @@ public class CharacterServiceImpl implements CharacterService {
     public Optional<Character> findById(Integer id) {
         return characterRepository.findById(id);
     }
-@Transactional
+
+    @Transactional
     @Override
-    public CharacterDTO save(CharacterDTO incomingCharacter, MultipartFile file,String ids) {
-    List<Comics> comicsList=new ArrayList<>();
+    public CharacterDTO save(CharacterDTO incomingCharacter, MultipartFile file, String ids) {
+        List<Comics> comicsList = new ArrayList<>();
         if (characterRepository.findByName(incomingCharacter.getName()).isPresent())
             throw new SuchElementAlreadyExist("character with name= " + incomingCharacter.getName() + " already Exist");
-        if(!Objects.equals(ids, "")&&ids!=null)
+        if (!Objects.equals(ids, "") && ids != null)
             comicsList = getComicsListById(ids);
 
         String imageUri = fileSystemStorageService.store(file);
@@ -69,23 +67,42 @@ public class CharacterServiceImpl implements CharacterService {
                 .setDescription(incomingCharacter.getDescription())
                 .setThumbnailUri(incomingCharacter.getThumbnail_uri())
                 .setComics(comicsList);
-       // return  characterRepository.save(character);
-
         return new CharacterDTO(characterRepository.save(character));
     }
 
-List<Comics> getComicsListById(String ids){
-        List<Integer>IntList= Arrays.stream(ids.split(",")).toList().stream().map(Integer::parseInt).toList();
-        List<Comics>comicsList =new ArrayList<>();
-    for (Integer id:IntList) {
-        try {
-            comicsList.add(comicsService.findById(id));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-    return comicsList;
+    @Override
+    public CharacterDTO edit(CharacterDTO incomingCharacter, MultipartFile file, String ids,Integer characterId) {
+        List<Comics> comicsList = new ArrayList<>();
+        Optional<Character> character=characterRepository.findById(characterId);
+        if (character.isEmpty())
+            throw new ElementNotFound("character with id= " + characterId + " not found");
+        if (!Objects.equals(ids, "") && ids != null)
+            comicsList = getComicsListById(ids);
 
-}
+        ofNullable(incomingCharacter.getName()).map(character.get()::setName);
+        ofNullable(incomingCharacter.getDescription()).map(character.get()::setDescription);
+        ofNullable(incomingCharacter.getThumbnail_uri()).map(character.get()::setThumbnailUri);
+        ofNullable(comicsList).map(character.get()::setComics);
+        try {
+            return new CharacterDTO(characterRepository.save(character.get()));
+        }
+        catch (Exception e){throw new SuchElementAlreadyExist( e.getCause().getCause().getLocalizedMessage());}
+
+
+    }
+
+    List<Comics> getComicsListById(String ids) {
+        List<Integer> IntList = Arrays.stream(ids.split(",")).toList().stream().map(Integer::parseInt).toList();
+        List<Comics> comicsList = new ArrayList<>();
+        for (Integer id : IntList) {
+            try {
+                comicsList.add(comicsService.findById(id));
+            } catch (Exception e) {
+                throw new ElementNotFound(e.getMessage());
+            }
+        }
+        return comicsList;
+
+    }
 
 }
