@@ -1,14 +1,17 @@
 package com.stm.marvel.Entities;
 
+import com.stm.marvel.DTO.CharacterDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+@Accessors(chain = true)
 @Table(name = "characters")
 public class Character {
     @Id
@@ -25,4 +28,6 @@ public class Character {
     private List<Comics> comics;
     @Column(name="thumbnail_uri")
     private String thumbnailUri;
+
+
 }

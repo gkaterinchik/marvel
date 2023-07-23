@@ -1,7 +1,7 @@
 create table characters
 (
     id            bigserial ,
-    name          varchar(50)  not null,
+    name          varchar(50)  not null unique ,
     description   varchar(300) not null,
     thumbnail_uri varchar(100),
     primary key (id)

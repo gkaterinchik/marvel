@@ -2,9 +2,11 @@ package com.stm.marvel.DTO;
 
 import com.stm.marvel.Entities.Comics;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 
 @Data
-public class ComicsWithoutCharactersDTO {
+public class ComicsWithoutCharactersDTO  {
     private Integer id;
     private String title;
     private String creator;

@@ -26,4 +26,6 @@ public class Comics {
             joinColumns= @JoinColumn(name="comics_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name= "character_id",referencedColumnName = "id") )
     private List<Character> characters;
+
+
 }

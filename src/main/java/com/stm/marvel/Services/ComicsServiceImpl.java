@@ -1,6 +1,7 @@
 package com.stm.marvel.Services;
 
 import com.stm.marvel.DTO.ComicsDTO;
+import com.stm.marvel.Entities.Comics;
 import com.stm.marvel.Repositories.ComicsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,8 @@ public class ComicsServiceImpl implements ComicsService{
     }
 
     @Override
-    public ComicsDTO findById(Integer id) {
-        return null;
+    public Comics findById(Integer id) {
+        return comicsRepository.findById(id).orElseThrow();
     }
 
     @Override
