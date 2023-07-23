@@ -10,6 +10,7 @@ import com.stm.marvel.Repositories.Specifications.CharacterSpecification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,7 @@ public class CharacterServiceImpl implements CharacterService {
         if (comics != null) {
             spec = spec.and(CharacterSpecification.ContainsComicsWhithId(comics));
         }
-        return characterRepository.findAll(spec, PageRequest.of(page - 1, 5));
+        return characterRepository.findAll(spec, PageRequest.of(page - 1, 5, Sort.by("name").descending()));
     }
 
     @Override
@@ -71,9 +72,9 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public CharacterDTO edit(CharacterDTO incomingCharacter, MultipartFile file, String ids,Integer characterId) {
+    public CharacterDTO edit(CharacterDTO incomingCharacter, MultipartFile file, String ids, Integer characterId) {
         List<Comics> comicsList = new ArrayList<>();
-        Optional<Character> character=characterRepository.findById(characterId);
+        Optional<Character> character = characterRepository.findById(characterId);
         if (character.isEmpty())
             throw new ElementNotFound("character with id= " + characterId + " not found");
         if (!Objects.equals(ids, "") && ids != null)
@@ -85,8 +86,9 @@ public class CharacterServiceImpl implements CharacterService {
         ofNullable(comicsList).map(character.get()::setComics);
         try {
             return new CharacterDTO(characterRepository.save(character.get()));
+        } catch (Exception e) {
+            throw new SuchElementAlreadyExist(e.getCause().getCause().getLocalizedMessage());
         }
-        catch (Exception e){throw new SuchElementAlreadyExist( e.getCause().getCause().getLocalizedMessage());}
 
 
     }
@@ -96,7 +98,7 @@ public class CharacterServiceImpl implements CharacterService {
         List<Comics> comicsList = new ArrayList<>();
         for (Integer id : IntList) {
             try {
-                comicsList.add(comicsService.findById(id));
+                comicsList.add(comicsService.findById(id).orElseThrow(() -> new ElementNotFound("Comics with id = " + id + " not exist")));
             } catch (Exception e) {
                 throw new ElementNotFound(e.getMessage());
             }

@@ -3,7 +3,6 @@ package com.stm.marvel.Services;
 import com.stm.marvel.DTO.CharacterDTO;
 import com.stm.marvel.Entities.Character;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;

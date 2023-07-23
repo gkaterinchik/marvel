@@ -4,11 +4,17 @@ import com.stm.marvel.DTO.ComicsDTO;
 import com.stm.marvel.Entities.Comics;
 import org.springframework.data.domain.Page;
 
-public interface ComicsService {
-Page<ComicsDTO> findComisByCharacterId(Integer characterId);
-Page<ComicsDTO> findAll();
-Comics findById(Integer id);
+import java.util.Optional;
 
-ComicsDTO save(ComicsDTO comics);
+public interface ComicsService {
+    Page<Comics> getAllComicsByCharacterId(Integer characterId,String name, String description, Integer characters,Integer page);
+
+    Page<ComicsDTO> findAll();
+
+    Optional<Comics> findById(Integer id);
+
+    ComicsDTO save(ComicsDTO comics);
+
+    Page<Comics> find(String name, String description, Integer comics, Integer page);
 
 }

@@ -2,8 +2,6 @@ package com.stm.marvel.Controllers;
 
 import com.stm.marvel.DTO.CharacterDTO;
 import com.stm.marvel.DTO.ComicsDTO;
-import com.stm.marvel.DTO.CreateCharacterResponse;
-import com.stm.marvel.Entities.Character;
 import com.stm.marvel.Exceptions.ElementNotFound;
 import com.stm.marvel.Services.CharacterService;
 import com.stm.marvel.Services.ComicsService;
@@ -12,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/public/characters")
@@ -31,7 +27,7 @@ public class CharacterController {
     public Page<CharacterDTO> getAllCharacters(@RequestParam(name = "p", defaultValue = "1") Integer page,
                                                @RequestParam(name = "name", required = false) String name,
                                                @RequestParam(name = "description", required = false) String description,
-                                               @RequestParam(name = "comics", required = false) Integer comics) {
+                                               @RequestParam(name = "comics", required = false) Integer comics                                               ) {
         if (page < 1) {
             page = 1;
         }
@@ -47,8 +43,15 @@ public class CharacterController {
     }
 
     @GetMapping("/{characterID}/comics")
-    public List<ComicsDTO> getComicsByCharacterId(Integer characterId) {
-        return null;
+    public Page<ComicsDTO> getComicsByCharacterId(@RequestParam(name = "p", defaultValue = "1") Integer page,
+                                                  @RequestParam(name = "title", required = false) String name,
+                                                  @RequestParam(name = "description", required = false) String description,
+                                                  @RequestParam(name = "characters", required = false) Integer characters,
+                                                  @PathVariable Integer characterID) {
+        if (page < 1) {
+            page = 1;
+        }
+        return comicsService.getAllComicsByCharacterId(characterID,name, description, characters, page).map(ComicsDTO::new);
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
