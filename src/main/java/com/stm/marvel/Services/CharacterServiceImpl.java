@@ -7,7 +7,10 @@ import com.stm.marvel.Exceptions.ElementNotFound;
 import com.stm.marvel.Exceptions.SuchElementAlreadyExist;
 import com.stm.marvel.Repositories.CharacterRepository;
 import com.stm.marvel.Repositories.Specifications.CharacterSpecification;
+import com.stm.marvel.Repositories.Specifications.ComicsSpecification;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,16 +24,31 @@ import static java.util.Optional.ofNullable;
 
 @Service
 public class CharacterServiceImpl implements CharacterService {
+    @Autowired
+    @Lazy
     CharacterRepository characterRepository;
+    @Autowired
     StorageService fileSystemStorageService;
+    @Autowired
     ComicsService comicsService;
-
-
-    public CharacterServiceImpl(CharacterRepository characterRepository, StorageService fileSystemStorageService, ComicsService comicsService) {
-        this.comicsService = comicsService;
+    public void setCharacterRepository(CharacterRepository characterRepository) {
         this.characterRepository = characterRepository;
+    }
+
+    public void setFileSystemStorageService(StorageService fileSystemStorageService) {
         this.fileSystemStorageService = fileSystemStorageService;
     }
+
+    public void setComicsService(ComicsService comicsService) {
+        this.comicsService = comicsService;
+    }
+
+
+//    public CharacterServiceImpl(CharacterRepository characterRepository, StorageService fileSystemStorageService) {
+//
+//        this.characterRepository = characterRepository;
+//        this.fileSystemStorageService = fileSystemStorageService;
+//    }
 
     @Override
     public Page<Character> find(String name, String description, Integer comics, Integer page) {
@@ -93,6 +111,20 @@ public class CharacterServiceImpl implements CharacterService {
 
     }
 
+    @Override
+    public Page<Character> getAllCharactersByComicsId(Integer ComicsId, String name, String description, Integer comics, Integer page) {
+        Specification<Character> spec = Specification.where(null);
+        if (name != null) {
+            spec = spec.and(CharacterSpecification.nameLike(name));
+        }
+        if (description != null) {
+            spec = spec.and(CharacterSpecification.descriptionLike(description));
+        }
+
+        spec = spec.and(CharacterSpecification.byComicsId(ComicsId));
+        return characterRepository.findAll(spec, PageRequest.of(page - 1, 5));
+    }
+
     List<Comics> getComicsListById(String ids) {
         List<Integer> IntList = Arrays.stream(ids.split(",")).toList().stream().map(Integer::parseInt).toList();
         List<Comics> comicsList = new ArrayList<>();
@@ -106,5 +138,6 @@ public class CharacterServiceImpl implements CharacterService {
         return comicsList;
 
     }
+
 
 }

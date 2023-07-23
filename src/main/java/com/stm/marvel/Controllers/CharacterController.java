@@ -46,12 +46,11 @@ public class CharacterController {
     public Page<ComicsDTO> getComicsByCharacterId(@RequestParam(name = "p", defaultValue = "1") Integer page,
                                                   @RequestParam(name = "title", required = false) String name,
                                                   @RequestParam(name = "description", required = false) String description,
-                                                  @RequestParam(name = "characters", required = false) Integer characters,
                                                   @PathVariable Integer characterID) {
         if (page < 1) {
             page = 1;
         }
-        return comicsService.getAllComicsByCharacterId(characterID,name, description, characters, page).map(ComicsDTO::new);
+        return comicsService.find(name, description, characterID, page).map(ComicsDTO::new);
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})

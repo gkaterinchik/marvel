@@ -3,11 +3,13 @@ package com.stm.marvel.Entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+@Accessors(chain = true)
 @Table(name = "comics")
 public class Comics {
     @Id

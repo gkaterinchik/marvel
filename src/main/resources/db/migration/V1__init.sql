@@ -11,7 +11,7 @@ create table comics
     id          bigserial ,
     title       varchar(50)  not null,
     description varchar(300) not null,
-    cover_uri   varchar(30),
+    cover_uri   varchar(100),
     creator     varchar(30),
     primary key (id)
 
