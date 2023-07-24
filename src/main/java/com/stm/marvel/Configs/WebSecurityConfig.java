@@ -30,10 +30,12 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v1/public/**").permitAll()
+                        .requestMatchers("/v1/public/characters/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/v1/public/comics/**").hasAnyRole("USER","ADMIN")
+                        //.requestMatchers("/**").permitAll()
                         .requestMatchers("/v1/public/registration").permitAll()
                         .requestMatchers("/v1/public/auth").permitAll()
-                        .requestMatchers("/v1/public/files/**").permitAll()
+
 
                 )
 

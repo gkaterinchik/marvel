@@ -2,6 +2,7 @@ package com.stm.marvel.DTO;
 
 import com.stm.marvel.Entities.Character;
 import com.stm.marvel.Entities.Comics;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,12 +15,18 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class CharacterDTO{
+@Schema(description = "Сущность для отображения информации о персонаже",name = "characterDTO")
 
+public class CharacterDTO{
+    @Schema(description = "Идентификатор персонажа в БД")
     private Integer id;
+    @Schema(description = "Имя персонажа")
     private String name;
+    @Schema(description = "Описание персонажа")
     private String description;
+    @Schema(description = "Иконка персонажа")
     private String thumbnail_uri;
+    @Schema(description = "Список комиксов в котором есть данный персонаж")
     private List<ComicsWithoutCharactersDTO> comics;
 
     public CharacterDTO(Character character){
