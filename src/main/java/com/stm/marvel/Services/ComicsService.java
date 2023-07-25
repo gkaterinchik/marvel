@@ -17,7 +17,7 @@ public interface ComicsService {
 
     ComicsDTO save(ComicsDTO comics);
 
-    Page<Comics> find(String name, String description, Integer comics, Integer page);
+    Page<Comics> find(String name, String description, Integer comics, Integer page,String sortBy);
     ComicsDTO save(ComicsDTO character, MultipartFile file, String ids);
     ComicsDTO edit(ComicsDTO character, MultipartFile file,String ids,Integer ComicsId);
 

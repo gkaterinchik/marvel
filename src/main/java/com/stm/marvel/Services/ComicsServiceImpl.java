@@ -54,7 +54,7 @@ public class ComicsServiceImpl implements ComicsService {
     }
 
     @Override
-    public Page<Comics> find(String name, String description, Integer comics, Integer page) {
+    public Page<Comics> find(String name, String description, Integer comics, Integer page,String sortBy) {
         Specification<Comics> spec = Specification.where(null);
         if (name != null) {
             spec = spec.and(ComicsSpecification.titleLike(name));
@@ -65,7 +65,7 @@ public class ComicsServiceImpl implements ComicsService {
         if (comics != null) {
             spec = spec.and(ComicsSpecification.ContainsCharacterWhithId(comics));
         }
-        return comicsRepository.findAll(spec, PageRequest.of(page - 1, 5, Sort.by("title").descending()));
+        return comicsRepository.findAll(spec, PageRequest.of(page - 1, 5, Sort.by(sortBy).ascending()));
     }
 
     @Override

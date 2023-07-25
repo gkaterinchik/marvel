@@ -51,7 +51,7 @@ public class CharacterServiceImpl implements CharacterService {
 //    }
 
     @Override
-    public Page<Character> find(String name, String description, Integer comics, Integer page) {
+    public Page<Character> find(String name, String description, Integer comics, Integer page,String sortBy) {
         Specification<Character> spec = Specification.where(null);
         if (name != null) {
             spec = spec.and(CharacterSpecification.nameLike(name));
@@ -62,7 +62,7 @@ public class CharacterServiceImpl implements CharacterService {
         if (comics != null) {
             spec = spec.and(CharacterSpecification.ContainsComicsWhithId(comics));
         }
-        return characterRepository.findAll(spec, PageRequest.of(page - 1, 5, Sort.by("name").descending()));
+        return characterRepository.findAll(spec, PageRequest.of(page - 1, 5, Sort.by(sortBy).ascending()));
     }
 
     @Override
@@ -112,7 +112,7 @@ public class CharacterServiceImpl implements CharacterService {
     }
 
     @Override
-    public Page<Character> getAllCharactersByComicsId(Integer ComicsId, String name, String description, Integer comics, Integer page) {
+    public Page<Character> getAllCharactersByComicsId(Integer ComicsId, String name, String description, Integer comics, Integer page,String sortBy) {
         Specification<Character> spec = Specification.where(null);
         if (name != null) {
             spec = spec.and(CharacterSpecification.nameLike(name));
@@ -122,7 +122,7 @@ public class CharacterServiceImpl implements CharacterService {
         }
 
         spec = spec.and(CharacterSpecification.byComicsId(ComicsId));
-        return characterRepository.findAll(spec, PageRequest.of(page - 1, 5));
+        return characterRepository.findAll(spec, PageRequest.of(page - 1, 5, Sort.by(sortBy).ascending()));
     }
 
     List<Comics> getComicsListById(String ids) {

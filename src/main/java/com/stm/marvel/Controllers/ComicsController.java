@@ -7,6 +7,7 @@ import com.stm.marvel.Services.CharacterService;
 import com.stm.marvel.Services.ComicsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/v1/public/comics")
+@SecurityRequirement(name = "JWT")
 @Tag(name="Контроллер комиксов",description = "Запрос списка всех комиксов, добавление новых комиксов," +
         "запрос комикса по идентификатору, изменение комикса")
 public class ComicsController {
@@ -32,11 +34,12 @@ public class ComicsController {
     public Page<ComicsDTO> getComics(@RequestParam(name = "p", defaultValue = "1")@Parameter(description = "Номер страницы") Integer page,
             @RequestParam(name = "title", required = false)@Parameter(description = "дополнительный фильтр по названию") String name,
             @RequestParam(name = "description", required = false)@Parameter(description = "дополнительный фильтр по описанию") String description,
-            @RequestParam(name = "characters", required = false)@Parameter(description = "Фильтр по персонажу") Integer characters) {
+            @RequestParam(name = "characters", required = false)@Parameter(description = "Фильтр по персонажу") Integer characters,
+            @RequestParam(name = "sortBy", defaultValue = "title")@Parameter(description = "Поле по которому сортировать") String sortBy) {
         if (page < 1) {
             page = 1;
         }
-        return comicsService.find(name, description, characters, page).map(ComicsDTO::new);
+        return comicsService.find(name, description, characters, page,sortBy).map(ComicsDTO::new);
 
 
     }
@@ -59,11 +62,12 @@ public class ComicsController {
     public Page<CharacterDTO> getCharactersByComicsId(@RequestParam(name = "p", defaultValue = "1")@Parameter(description = "Номер страницы") Integer page,
                                                          @RequestParam(name = "name", required = false)@Parameter(description = "дополнительный фильтр по имени персонажа") String name,
                                                          @RequestParam(name = "description", required = false)@Parameter(description = "дополнительный фильтр по описанию") String description,
-                                                         @PathVariable @Parameter(description = "Идентификатор комикса") Integer ComicsID) {
+                                                         @PathVariable @Parameter(description = "Идентификатор комикса") Integer ComicsID,
+                                                         @RequestParam(name = "sortBy", defaultValue = "name")@Parameter(description = "Поле по которому сортировать") String sortBy) {
         if (page < 1) {
             page = 1;
         }
-        return characterService.find(name, description, ComicsID, page).map(CharacterDTO::new);
+        return characterService.find(name, description, ComicsID, page,sortBy).map(CharacterDTO::new);
     }
 
 
